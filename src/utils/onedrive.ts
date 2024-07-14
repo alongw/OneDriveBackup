@@ -1,6 +1,6 @@
 import axios from 'axios'
 import config from '@/utils/config'
-import error from './error'
+import throwError from './error'
 import { Client } from '@microsoft/microsoft-graph-client'
 
 const { OneDrive: OneDriveConfig } = config.get()
@@ -22,8 +22,8 @@ const getAccessToken = async () => {
             }
         )
         token = res.data.access_token
-    } catch (e) {
-        error.new(e, '获取 Onedrive token 失败', 'fatal')
+    } catch (error) {
+        throwError.new(error, '获取 Onedrive token 失败', 'fatal')
     }
     return token
 }
@@ -46,11 +46,11 @@ export const upload = async (fileStream: Blob, onedrivePath: string) => {
             status: true,
             data: response
         }
-    } catch (e) {
-        error.new(e, '上传文件到 Onedrive 失败', 'error')
+    } catch (error) {
+        throwError.new(error, '上传文件到 Onedrive 失败', 'error')
         return {
             status: false,
-            error: e,
+            error: error,
             message: '上传文件到 Onedrive 失败'
         }
     }
